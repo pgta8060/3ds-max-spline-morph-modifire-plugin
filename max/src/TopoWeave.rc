@@ -1,0 +1,164 @@
+// TopoWeave for 3ds Max - resources
+#include "resource.h"
+#include <winresrc.h>
+
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/////////////////////////////////////////////////////////////////////////////
+// Modifier rollout (command panel). Standard rollout width is 108 DLU.
+/////////////////////////////////////////////////////////////////////////////
+IDD_PARAMS DIALOGEX 0, 0, 108, 452
+STYLE DS_SETFONT | WS_CHILD | WS_VISIBLE
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "High Poly sources", -1, 3, 2, 102, 94
+    LISTBOX         IDC_HP_LIST, 7, 12, 94, 48, LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Pick", IDC_HP_PICK, "CustButton", WS_TABSTOP, 7, 63, 45, 12
+    PUSHBUTTON      "Add...", IDC_HP_ADD, 55, 63, 46, 12
+    CONTROL         "Remove", IDC_HP_REMOVE, "CustButton", WS_TABSTOP, 7, 78, 45, 12
+    PUSHBUTTON      "Clear", IDC_HP_CLEAR, 55, 78, 46, 12
+
+    GROUPBOX        "Projection", -1, 3, 99, 102, 38
+    LTEXT           "Offset:", -1, 7, 111, 30, 8
+    CONTROL         "", IDC_OFFSET_EDIT, "CustEdit", WS_TABSTOP, 52, 110, 40, 10
+    CONTROL         "", IDC_OFFSET_SPIN, "SpinnerControl", 0x0, 93, 110, 7, 10
+    CONTROL         "Live Conform", IDC_LIVE_CONFORM, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 123, 94, 10
+
+    GROUPBOX        "Spline Bridge", -1, 3, 140, 102, 92
+    LTEXT           "Segments:", -1, 7, 152, 40, 8
+    CONTROL         "", IDC_U_EDIT, "CustEdit", WS_TABSTOP, 52, 151, 40, 10
+    CONTROL         "", IDC_U_SPIN, "SpinnerControl", 0x0, 93, 151, 7, 10
+    CONTROL         "Auto rows (square quads)", IDC_AUTO_V, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 164, 94, 10
+    LTEXT           "Rows / span:", -1, 7, 178, 44, 8
+    CONTROL         "", IDC_V_EDIT, "CustEdit", WS_TABSTOP, 52, 177, 40, 10
+    CONTROL         "", IDC_V_SPIN, "SpinnerControl", 0x0, 93, 177, 7, 10
+    LTEXT           "Relax:", -1, 7, 191, 40, 8
+    CONTROL         "", IDC_RELAX_EDIT, "CustEdit", WS_TABSTOP, 52, 190, 40, 10
+    CONTROL         "", IDC_RELAX_SPIN, "SpinnerControl", 0x0, 93, 190, 7, 10
+    CONTROL         "Smooth flow", IDC_SMOOTH_FLOW, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 204, 94, 10
+    CONTROL         "Continue after commit", IDC_CONTINUE, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 217, 94, 10
+
+    GROUPBOX        "Auto Weld", -1, 3, 235, 102, 38
+    CONTROL         "Enabled", IDC_AUTO_WELD, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 246, 94, 10
+    LTEXT           "Threshold:", -1, 7, 259, 40, 8
+    CONTROL         "", IDC_WELD_EDIT, "CustEdit", WS_TABSTOP, 52, 258, 40, 10
+    CONTROL         "", IDC_WELD_SPIN, "SpinnerControl", 0x0, 93, 258, 7, 10
+
+    GROUPBOX        "Brushes", -1, 3, 276, 102, 38
+    LTEXT           "Radius:", -1, 7, 288, 40, 8
+    CONTROL         "", IDC_BRUSH_R_EDIT, "CustEdit", WS_TABSTOP, 52, 287, 40, 10
+    CONTROL         "", IDC_BRUSH_R_SPIN, "SpinnerControl", 0x0, 93, 287, 7, 10
+    LTEXT           "Strength:", -1, 7, 301, 40, 8
+    CONTROL         "", IDC_BRUSH_S_EDIT, "CustEdit", WS_TABSTOP, 52, 300, 40, 10
+    CONTROL         "", IDC_BRUSH_S_SPIN, "SpinnerControl", 0x0, 93, 300, 7, 10
+
+    GROUPBOX        "Display", -1, 3, 317, 102, 24
+    CONTROL         "Show Cage", IDC_SHOW_CAGE, "Button", BS_AUTOCHECKBOX | WS_TABSTOP, 7, 327, 60, 10
+    CONTROL         "", IDC_CAGE_COLOR, "ColorSwatch", 0x0, 70, 326, 30, 11
+
+    GROUPBOX        "Mesh", -1, 3, 344, 102, 104
+    PUSHBUTTON      "Open TopoWeave Palette", IDC_OPEN_PALETTE, 7, 354, 94, 13
+    PUSHBUTTON      "Conform All", IDC_CONFORM_ALL, 7, 370, 46, 12
+    PUSHBUTTON      "Relax All", IDC_RELAX_ALL, 55, 370, 46, 12
+    PUSHBUTTON      "Inspect", IDC_INSPECT, 7, 385, 46, 12
+    PUSHBUTTON      "Repair", IDC_REPAIR, 55, 385, 46, 12
+    LTEXT           "Snap to world 0:", -1, 7, 402, 60, 8
+    PUSHBUTTON      "X", IDC_SNAP_X, 7, 412, 29, 12
+    PUSHBUTTON      "Y", IDC_SNAP_Y, 39, 412, 30, 12
+    PUSHBUTTON      "Z", IDC_SNAP_Z, 72, 412, 29, 12
+    PUSHBUTTON      "Reset from input", IDC_RESET_INPUT, 7, 428, 56, 12
+    PUSHBUTTON      "Clear", IDC_CLEAR_MESH, 66, 428, 35, 12
+    CTEXT           "TopoWeave", IDC_VERSION, 3, 443, 102, 8
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Floating tool palette (owned by the active TopoWeave modifier)
+/////////////////////////////////////////////////////////////////////////////
+IDD_PALETTE DIALOGEX 0, 0, 124, 150
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "TopoWeave"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    CONTROL         "1  Spline Bridge", IDC_PAL_BRIDGE, "Button", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP, 4, 4, 116, 16
+    CONTROL         "2  Relax", IDC_PAL_RELAX, "Button", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP, 4, 22, 57, 14
+    CONTROL         "3  Move", IDC_PAL_MOVE, "Button", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP, 63, 22, 57, 14
+    CONTROL         "4  Conform", IDC_PAL_CONFORM, "Button", BS_AUTOCHECKBOX | BS_PUSHLIKE | WS_TABSTOP, 4, 38, 116, 14
+    PUSHBUTTON      "Commit (Enter)", IDC_PAL_COMMIT, 4, 58, 57, 14
+    PUSHBUTTON      "Clear strokes", IDC_PAL_CANCEL, 63, 58, 57, 14
+    PUSHBUTTON      "Remove last stroke", IDC_PAL_UNDO_STROKE, 4, 74, 116, 13
+    LTEXT           "", IDC_PAL_STATUS, 4, 92, 116, 36, SS_NOPREFIX
+    PUSHBUTTON      "Gestures...", IDC_PAL_HELP, 4, 132, 116, 13
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// Default hotkeys (scoped to the TopoWeave action context)
+/////////////////////////////////////////////////////////////////////////////
+IDR_ACCELERATORS ACCELERATORS
+BEGIN
+    "1",        ID_TW_BRIDGE,   VIRTKEY, NOINVERT
+    "2",        ID_TW_RELAX,    VIRTKEY, NOINVERT
+    "3",        ID_TW_MOVE,     VIRTKEY, NOINVERT
+    "4",        ID_TW_CONFORM,  VIRTKEY, NOINVERT
+    VK_RETURN,  ID_TW_COMMIT,   VIRTKEY, NOINVERT
+END
+
+/////////////////////////////////////////////////////////////////////////////
+STRINGTABLE
+BEGIN
+    IDS_LIBDESCRIPTION  "TopoWeave - spline driven retopology modifier"
+    IDS_CLASS_NAME      "TopoWeave"
+    IDS_CATEGORY        "TopoWeave"
+    IDS_PARAMS          "TopoWeave Parameters"
+    IDS_HP_NODES        "High Poly Sources"
+    IDS_OFFSET          "Offset"
+    IDS_LIVE_CONFORM    "Live Conform"
+    IDS_AUTO_WELD       "Auto Weld"
+    IDS_WELD_THRESHOLD  "Weld Threshold"
+    IDS_SHOW_CAGE       "Show Cage"
+    IDS_CAGE_COLOR      "Cage Color"
+    IDS_U_SEGMENTS      "Segments"
+    IDS_AUTO_V          "Auto Rows"
+    IDS_V_SEGMENTS      "Rows Per Span"
+    IDS_RELAX_ITERS     "Relax Iterations"
+    IDS_CONTINUE        "Continue After Commit"
+    IDS_BRUSH_RADIUS    "Brush Radius"
+    IDS_BRUSH_STRENGTH  "Brush Strength"
+    IDS_SMOOTH_FLOW     "Smooth Flow"
+    IDS_ACTIONS         "TopoWeave"
+    IDS_ACT_BRIDGE      "Spline Bridge Tool"
+    IDS_ACT_RELAX       "Relax Brush"
+    IDS_ACT_MOVE        "Move Brush"
+    IDS_ACT_CONFORM     "Conform Brush"
+    IDS_ACT_COMMIT      "Commit Bridge"
+    IDS_ACT_CANCEL      "Clear Strokes"
+    IDS_ACT_PALETTE     "Toggle Palette"
+END
+
+/////////////////////////////////////////////////////////////////////////////
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,1,0,0
+ PRODUCTVERSION 0,1,0,0
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "FileDescription", "TopoWeave retopology modifier for 3ds Max"
+            VALUE "FileVersion", "0.1.0"
+            VALUE "InternalName", "TopoWeave"
+            VALUE "OriginalFilename", "TopoWeave.dlm"
+            VALUE "ProductName", "TopoWeave"
+            VALUE "ProductVersion", "0.1.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END

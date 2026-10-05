@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    name: Core tests + demo (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y zlib1g-dev clang
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build -j
+      - name: Unit tests
+        run: ctest --test-dir build --output-on-failure
+      - name: Render demo images
+        run: ./build/topoweave_demo demo_output
+      - name: Max layer syntax check (SDK stand-in)
+        run: ./max/devtools/check_syntax.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-output
+          path: demo_output
+
+  windows:
+    name: Core tests (MSVC)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Unit tests
+        run: ctest --test-dir build -C Release --output-on-failure
