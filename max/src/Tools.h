@@ -44,6 +44,8 @@ private:
     double pixelSize(HWND hwnd, IPoint2 m, double depth);
     rtp::Vec3 viewDirection(HWND hwnd);
     void applyBrush(const rtp::SurfaceHit& hit);
+    // Point on the ray slightly in front of the surface (for overlays).
+    Point3 overlayPoint(const rtp::Ray& r, double frontFraction = 0.98);
     void updateHint(HWND hwnd, int flags, IPoint2 m);
 
     TopoWeaveMod* mod_;
@@ -58,6 +60,7 @@ private:
     bool hasPrevHit_ = false;
     rtp::Vec3 prevHit_;
     std::vector<int> touched_;
+    double overlayDepth_ = -1.0;
 };
 
 class TWCommandMode : public CommandMode {

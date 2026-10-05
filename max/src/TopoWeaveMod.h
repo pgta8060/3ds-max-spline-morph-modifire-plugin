@@ -165,14 +165,18 @@ public:
 
     // Viewport feedback drawn by Display()
     struct Feedback {
-        std::vector<IPoint3> stroke;     // live stroke in window coordinates
+        // The live stroke and the hint are placed in object space along the
+        // camera rays (just in front of the surface), so no window-coordinate
+        // conventions are involved.
+        std::vector<Point3> stroke;
         bool strokeIsRail = false;
         bool brushVisible = false;
         Point3 brushCenter;
         Point3 brushNormal;
         float brushRadius = 0;
         HWND hintWnd = nullptr;
-        IPoint2 hintPos;
+        Point3 hintAnchor;
+        bool hintAnchorValid = false;
         std::wstring hint;
     } feedback;
     void RequestRedraw(bool interactive);

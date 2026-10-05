@@ -55,6 +55,17 @@ rtp::Vec3 TWMouseProc::viewDirection(HWND hwnd) {
     return r.dir;
 }
 
+Point3 TWMouseProc::overlayPoint(const rtp::Ray& r, double frontFraction) {
+    rtp::SurfaceHit h;
+    if (mod_->HasSurface() && mod_->Surface().raycast(r, h)) {
+        overlayDepth_ = h.t;
+    } else if (overlayDepth_ <= 0.0) {
+        const rtp::Aabb& b = mod_->Surface().bounds();
+        overlayDepth_ = b.valid() ? (std::max)(rtp::dot(b.center() - r.origin, r.dir), 1e-3) : 100.0;
+    }
+    return ToPoint(r.at(overlayDepth_ * frontFraction));
+}
+
 TWMouseProc::Gesture TWMouseProc::classify(int flags) const {
     const bool c = (flags & MOUSE_CTRL) != 0;
     const bool s = (flags & MOUSE_SHIFT) != 0;
@@ -145,10 +156,12 @@ void TWMouseProc::begin(HWND hwnd, int flags, IPoint2 m) {
         return;
     }
     rtp::Ray r;
-    if (screenRay(hwnd, m, r)) rays_.push_back(r);
-
     auto& fb = mod_->feedback;
-    fb.stroke.assign(1, IPoint3(m.x, m.y, 0));
+    fb.stroke.clear();
+    if (screenRay(hwnd, m, r)) {
+        rays_.push_back(r);
+        fb.stroke.push_back(overlayPoint(r));
+    }
     fb.strokeIsRail = gesture_ == G_RAIL;
     fb.hintWnd = hwnd;
 
@@ -217,8 +230,10 @@ void TWMouseProc::move(HWND hwnd, int flags, IPoint2 m) {
         if (std::abs(m.x - last.x) + std::abs(m.y - last.y) < 2) break;
         screen_.push_back(m);
         rtp::Ray r;
-        if (screenRay(hwnd, m, r)) rays_.push_back(r);
-        mod_->feedback.stroke.push_back(IPoint3(m.x, m.y, 0));
+        if (screenRay(hwnd, m, r)) {
+            rays_.push_back(r);
+            mod_->feedback.stroke.push_back(overlayPoint(r));
+        }
         mod_->RequestRedraw(true);
         break;
     }
@@ -441,8 +456,10 @@ void TWMouseProc::updateHint(HWND hwnd, int flags, IPoint2 m) {
     }
     auto& fb = mod_->feedback;
     fb.hint = hint;
-    fb.hintPos = IPoint2(m.x + 18, m.y + 22);
     fb.hintWnd = hwnd;
+    rtp::Ray hr;
+    fb.hintAnchorValid = screenRay(hwnd, IPoint2(m.x + 18, m.y + 22), hr);
+    if (fb.hintAnchorValid) fb.hintAnchor = overlayPoint(hr, 0.5);  // well in front of everything
     if (IObjParam* ip = mod_->Interface()) ip->ReplacePrompt(hint.c_str());
 }
 

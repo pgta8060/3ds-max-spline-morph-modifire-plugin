@@ -23,7 +23,7 @@ std::wstring Widen(const std::string& s) {
     return w;
 }
 
-// GraphicsWindow::polyline / wPolyline accept at most 32 points per call, so
+// GraphicsWindow::polyline accepts at most 32 points per call, so
 // longer lines are drawn as overlapping chunks.
 constexpr size_t kMaxGWPoints = 32;
 
@@ -40,11 +40,6 @@ void DrawChunked(std::vector<P> pts, bool closed, F&& draw) {
 void DrawLine3D(GraphicsWindow* gw, std::vector<Point3> pts, bool closed) {
     DrawChunked(std::move(pts), closed,
                 [gw](int n, Point3* p) { gw->polyline(n, p, nullptr, FALSE, nullptr); });
-}
-
-void DrawLineScreen(GraphicsWindow* gw, std::vector<IPoint3> pts) {
-    DrawChunked(std::move(pts), false,
-                [gw](int n, IPoint3* p) { gw->wPolyline(n, p, nullptr, FALSE, nullptr); });
 }
 
 void DrawPolyline(GraphicsWindow* gw, const rtp::Polyline& line) {
@@ -735,17 +730,17 @@ int TopoWeaveMod::Display(TimeValue t, INode* inode, ViewExp* vpt, int /*flags*/
         DrawLine3D(gw, std::move(circle), true);
     }
 
-    // Screen space feedback in the viewport the user is working in.
+    // Live stroke and cursor hint, only in the viewport the user works in.
     if (vpt->GetHWnd() == feedback.hintWnd) {
         if (feedback.stroke.size() > 1) {
             if (feedback.strokeIsRail) gw->setColor(LINE_COLOR, 0.2f, 0.8f, 1.0f);
             else gw->setColor(LINE_COLOR, 1.0f, 1.0f, 1.0f);
-            DrawLineScreen(gw, feedback.stroke);
+            DrawLine3D(gw, feedback.stroke, false);
         }
-        if (!feedback.hint.empty() && activeTool_ != TW_TOOL_NONE) {
+        if (!feedback.hint.empty() && feedback.hintAnchorValid && activeTool_ != TW_TOOL_NONE) {
             gw->setColor(TEXT_COLOR, 1.0f, 1.0f, 0.85f);
-            IPoint3 tp(feedback.hintPos.x, feedback.hintPos.y, 0);
-            gw->wText(&tp, feedback.hint.c_str());
+            Point3 anchor = feedback.hintAnchor;
+            gw->text(&anchor, feedback.hint.c_str());
         }
     }
 

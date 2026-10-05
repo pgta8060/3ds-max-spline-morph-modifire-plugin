@@ -134,7 +134,7 @@ enum MarkerType { POINT_MRKR, DOT_MRKR };
 #define REDRAW_NORMAL 2
 class GraphicsWindow { public: DWORD getRndLimits() const; void setRndLimits(DWORD); void setTransform(const Matrix3&); void setColor(ColorType, float, float, float);
   void startSegments(); void segment(Point3*, int); void endSegments(); void startMarkers(); void marker(Point3*, MarkerType); void endMarkers();
-  void polyline(int, Point3*, Point3*, int, int*); void wPolyline(int, IPoint3*, Point3*, int, int*); void wText(IPoint3*, const MCHAR*); int getWinSizeX(); int getWinSizeY(); };
+  void polyline(int, Point3*, Point3*, int, int*); void wPolyline(int, IPoint3*, Point3*, int, int*); void wText(IPoint3*, const MCHAR*); void text(Point3*, const MCHAR*); int getWinSizeX(); int getWinSizeY(); };
 class ViewExp { public: bool IsAlive() const; void MapScreenToWorldRay(float, float, Ray&); GraphicsWindow* getGW(); HWND GetHWnd(); };
 // ---------------- Mouse / command modes ----------------
 #define MOUSE_ABORT 0
